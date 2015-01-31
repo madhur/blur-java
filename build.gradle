@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = 1.0
+
+// tag::repositories[]
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+// end::repositories[]
+
+
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+	manifest {
+        	attributes 'Main-Class': 'in.co.madhur.Blur'
+    }
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+dependencies {
+    compile 'net.coobird:thumbnailator:0.4.8'
+    compile 'com.jhlabs:filters:2.0.235-1'
+
+}
+// end::jar[]
